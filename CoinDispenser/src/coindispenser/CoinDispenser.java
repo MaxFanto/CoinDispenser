@@ -127,7 +127,7 @@ public class CoinDispenser {
         for (int i = 0; i < VALUES.length; i++) {
             if (coinCounters[i] < 0)
                 continue;
-            coinCounters[i] -= 1;
+            coinCounters[i] -= 1;   // Si può scrivere coinCounters[i]--
             coins.add(VALUES[i]);
             boolean ok = composeChangeHelper(value - VALUES[i], maxCoins - 1, maxExcess, coins);
 //            coinCounters[i] += 1;
