@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CoinDispenser.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoinDispenser&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">coindispenser</a> &gt; <span class="el_source">CoinDispenser.java</span></div><h1>CoinDispenser.java</h1><pre class="source lang-java linenums">/*
+ * Code used in the &quot;Software Engineering&quot; course.
+ *
+ * Copyright 2017 by Claudio Cusano (claudio.cusano@unipv.it)
+ * Dept of Electrical, Computer and Biomedical Engineering,
+ * University of Pavia.
+ */
+package coindispenser;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * Simulation of a device that dispenses coins.
+ * 
+ * @author Claudio Cusano &lt;claudio.cusano@unipv.it&gt;
+ */
+public class CoinDispenser {
+
+<span class="fc" id="L21">    private static final int[] VALUES = {200, 100, 50, 20, 10, 5, 2, 1};</span>
+    int[] coinCounters;        
+
+    /**
+     * Create a new empty dispenser.
+     */
+<span class="nc" id="L27">    public CoinDispenser() {</span>
+<span class="nc" id="L28">        coinCounters = new int[VALUES.length];</span>
+<span class="nc" id="L29">    }    </span>
+    
+    /**
+     * Create a new dispenser.
+     * 
+     * @param initialCoins Initial number of coins of each type
+     */
+<span class="fc" id="L36">    public CoinDispenser(int initialCoins) {</span>
+<span class="fc" id="L37">        coinCounters = new int[VALUES.length];</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (int i = 1; i &lt; coinCounters.length; i++)</span>
+<span class="fc" id="L39">            coinCounters[i] = initialCoins;</span>
+<span class="fc" id="L40">    }</span>
+        
+    /**
+     * Increase the number of coins of a given coinValue.
+     * 
+     * @param coinValue type of coins to be added (in cents)
+     * @param amount number of coins to add
+     */
+    public void addCoins(int coinValue, int amount) {
+<span class="fc" id="L49">        int index = getValueIndex(coinValue);</span>
+<span class="pc bpc" id="L50" title="2 of 4 branches missed.">        if (index &gt;= 0 &amp;&amp; amount &gt;= 0)</span>
+<span class="fc" id="L51">            coinCounters[index] += amount;</span>
+<span class="fc" id="L52">    }</span>
+    
+    /**
+     * Return the number of available coins of a given type,
+     * 
+     * @param coinValue type of coins to be added (in cents)
+     * @return the number of available coins for the specified coinValue
+     */
+    public int countCoins(int coinValue) {
+<span class="fc" id="L61">        int index = getValueIndex(coinValue);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (index &lt; 0)</span>
+<span class="nc" id="L63">            return 0;</span>
+<span class="fc" id="L64">        return coinCounters[index];</span>
+    }        
+    
+    /**
+     * Compute a sequence of coins that can be used to form the requested value.
+     * 
+     * null is returned then it is not possible to form the value because of the
+     * lack of coins, or because of other constraints.
+     * 
+     * @param value value (in cents) to be composed
+     * @param maxCoins maximum number of coins that can be used to compose the value
+     * @param maxExcess maximum allowed excess that can be tolerated in composing the value
+     * @return the list of coins or null
+     */
+    public List&lt;Integer&gt; composeChange(int value, int maxCoins, int maxExcess) {
+<span class="nc" id="L79">        ArrayList&lt;Integer&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L80">        composeChangeHelper(value, maxCoins, maxExcess, result);</span>
+<span class="nc" id="L81">        return result;</span>
+    }
+    
+    /**
+     * Update the count of the available coins, according to the list of coins
+     * to dispense.
+     * 
+     * An exception is thrown when it is not possible to dispense the requested coins.
+     * 
+     * @param coins list of values representing the coins to dispense
+     * @throws DispenserError 
+     */
+    public void dispenseCoins(List&lt;Integer&gt; coins) throws DispenserError {
+<span class="fc" id="L94">        int[] newcounts = coinCounters;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (int c : coins) {</span>
+<span class="fc" id="L96">            int index = getValueIndex(c);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">            if (index &lt; 0)</span>
+<span class="nc" id="L98">                throw new DispenserError(&quot;Unknown coin type '&quot; + c + &quot;'&quot;);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            if (newcounts[index] &lt; 1)</span>
+<span class="nc" id="L100">                throw new DispenserError(&quot;Not enough coins of type &quot; + c);</span>
+<span class="fc" id="L101">            newcounts[index]--;</span>
+<span class="fc" id="L102">        }</span>
+<span class="fc" id="L103">        coinCounters = newcounts;</span>
+<span class="fc" id="L104">    }</span>
+    
+    // return the index in VALUE corresponding to the given value (-1 when value is not valid).
+    private int getValueIndex(int value) {
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        for (int i = 0; i &lt; VALUES.length; i++)</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (VALUES[i] == value)</span>
+<span class="fc" id="L110">                return i;</span>
+<span class="nc" id="L111">        return -1;</span>
+    }
+    
+    // Helper function computing if it is possible to compose the requested amount.
+    private boolean composeChangeHelper(int value, int maxCoins, int maxExcess, List&lt;Integer&gt; coins) {
+<span class="nc bnc" id="L116" title="All 4 branches missed.">        if (value &lt;= 0 &amp;&amp; value &gt;= -maxExcess)</span>
+<span class="nc" id="L117">            return true;</span>
+<span class="nc bnc" id="L118" title="All 4 branches missed.">        else if (value &lt; 0 || maxCoins == 0)</span>
+<span class="nc" id="L119">            return false;</span>
+        
+<span class="nc" id="L121">        int coin = findCoin(value, value + maxExcess);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (coin &gt; 0) {</span>
+<span class="nc" id="L123">            coins.add(coin);</span>
+<span class="nc" id="L124">            return true;</span>
+        }
+                        
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        for (int i = 0; i &lt; VALUES.length; i++) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (coinCounters[i] &lt; 0)</span>
+<span class="nc" id="L129">                continue;</span>
+<span class="nc" id="L130">            coinCounters[i] -= 1;</span>
+<span class="nc" id="L131">            coins.add(VALUES[i]);</span>
+<span class="nc" id="L132">            boolean ok = composeChangeHelper(value - VALUES[i], maxCoins - 1, maxExcess, coins);</span>
+<span class="nc" id="L133">            coinCounters[i] += 1;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            if (ok)</span>
+<span class="nc" id="L135">                return true;</span>
+<span class="nc" id="L136">            coins.remove(coins.size() - 1);</span>
+        }
+        
+<span class="nc" id="L139">        return false;</span>
+    }
+    
+    // Return the most valuable coin available in the specified range of values.
+    private int findCoin(int minValue, int maxValue) {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (int i = VALUES.length - 1; i &gt;= 0; i--)</span>
+<span class="nc bnc" id="L145" title="All 6 branches missed.">            if (VALUES[i] &gt;= minValue &amp;&amp; VALUES[i] &lt; maxValue &amp;&amp; coinCounters[i] &gt; 0)</span>
+<span class="nc" id="L146">                return VALUES[i];</span>
+<span class="nc" id="L147">        return 0;</span>
+    }        
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

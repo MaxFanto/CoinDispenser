@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CoinDispenserDemo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;CoinDispenser&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">coindispenser</a> &gt; <span class="el_source">CoinDispenserDemo.java</span></div><h1>CoinDispenserDemo.java</h1><pre class="source lang-java linenums">/*
+ * Code used in the &quot;Software Engineering&quot; course.
+ *
+ * Copyright 2017 by Claudio Cusano (claudio.cusano@unipv.it)
+ * Dept of Electrical, Computer and Biomedical Engineering,
+ * University of Pavia.
+ */
+package coindispenser;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+/**
+ * Class containing the main method.
+ * 
+ * @author Claudio Cusano &lt;claudio.cusano@unipv.it&gt;
+ */
+<span class="nc" id="L23">public class CoinDispenserDemo {</span>
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L28">        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));</span>
+<span class="nc" id="L29">        CoinDispenser dispenser = new CoinDispenser(300);</span>
+<span class="nc" id="L30">        final int MAX_COINS = 10;</span>
+<span class="nc" id="L31">        final int MAX_EXTRA = 4;</span>
+
+        for (;;) {
+<span class="nc" id="L34">            System.out.print(&quot;Enter the amount to dispense in cents: &quot;);</span>
+            String line;            
+            try {
+<span class="nc" id="L37">                line = reader.readLine().trim();</span>
+<span class="nc" id="L38">            } catch (IOException ex) {</span>
+<span class="nc" id="L39">                System.err.println(ex);</span>
+<span class="nc" id="L40">                break;</span>
+<span class="nc" id="L41">            }</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            if (line.length() == 0)</span>
+<span class="nc" id="L43">                break;</span>
+<span class="nc" id="L44">            int value = Integer.parseInt(line);</span>
+<span class="nc" id="L45">            List&lt;Integer&gt; coins = dispenser.composeChange(value, MAX_COINS, MAX_EXTRA);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (coins == null) {</span>
+<span class="nc" id="L47">                System.out.println(&quot;Impossible to dispense the coins.&quot;);</span>
+            } else {
+                try {
+<span class="nc" id="L50">                    dispenser.dispenseCoins(coins);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">                    for (int c : coins)</span>
+<span class="nc" id="L52">                        System.out.print(c + &quot; &quot;);                </span>
+<span class="nc" id="L53">                    System.out.println(&quot;&quot;);</span>
+<span class="nc" id="L54">                } catch (DispenserError ex) {</span>
+<span class="nc" id="L55">                    Logger.getLogger(CoinDispenser.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L56">                }</span>
+            }
+<span class="nc" id="L58">        }</span>
+<span class="nc" id="L59">    }    </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

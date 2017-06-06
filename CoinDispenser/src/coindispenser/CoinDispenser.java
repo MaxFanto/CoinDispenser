@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class CoinDispenser {
 
-    private static final int[] VALUES = {200, 100, 50, 20, 5, 2, 1};
+    private static final int[] VALUES = {200, 100, 50, 20, 10, 5, 2, 1};    // Mancava il 10
     int[] coinCounters;        
 
     /**
@@ -35,7 +35,7 @@ public class CoinDispenser {
      */
     public CoinDispenser(int initialCoins) {
         coinCounters = new int[VALUES.length];
-        for (int i = 1; i < coinCounters.length; i++)
+        for (int i = 0; i < coinCounters.length; i++)   // i partiva da 1, quindi non inizializzava il 200
             coinCounters[i] = initialCoins;
     }
         
@@ -91,7 +91,7 @@ public class CoinDispenser {
      * @throws DispenserError 
      */
     public void dispenseCoins(List<Integer> coins) throws DispenserError {
-        int[] newcounts= coinCounters.clone();
+        int[] newcounts = coinCounters;
         for (int c : coins) {
             int index = getValueIndex(c);
             if (index < 0)
@@ -130,7 +130,10 @@ public class CoinDispenser {
             coinCounters[i] -= 1;
             coins.add(VALUES[i]);
             boolean ok = composeChangeHelper(value - VALUES[i], maxCoins - 1, maxExcess, coins);
-            coinCounters[i] += 1;
+//            coinCounters[i] += 1;
+//            Sbagliato incrementare di 1, poichè nel contatore della moneta utilizzata non avrei 
+//            il decremento che sarebbe la prova del suo utilizzo
+
             if (ok)
                 return true;
             coins.remove(coins.size() - 1);
